@@ -25,6 +25,8 @@ func main() {
 
 	e := echo.New()
 	e.GET("/persons", handlers.GetPersons(db))
+	e.GET("/persons/:id", handlers.GetPerson(db))
+	e.POST("/persons", handlers.CreatePerson(db))
 
 	e.Start(":8080")
 }
