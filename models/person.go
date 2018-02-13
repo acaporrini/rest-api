@@ -87,3 +87,46 @@ func CreatePerson(db *sql.DB, c echo.Context) Person {
 
 	return person
 }
+
+func UpdatePerson(db *sql.DB, id int, c echo.Context) Person {
+	var person Person
+	sql := "UPDATE persons SET first_name = ?, last_name = ? WHERE id = ?"
+	stmt, err := db.Prepare(sql)
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer stmt.Close()
+
+	_, err2 := stmt.Exec(c.FormValue("first_name"), c.FormValue("last_name"), id)
+
+	if err2 != nil {
+		panic(err)
+	}
+
+	row := db.QueryRow("select * from persons order by id desc limit 1")
+	err = row.Scan(&person.Id, &person.First_Name, &person.Last_Name)
+
+	return person
+}
+
+func DeletePerson(db *sql.DB, id int) string {
+	sql := "DELETE FROM persons WHERE id = ?"
+	stmt, err := db.Prepare(sql)
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer stmt.Close()
+
+	_, err2 := stmt.Exec(id)
+
+	if err2 != nil {
+		panic(err)
+	}
+
+	return fmt.Sprintf("{'message' : 'Successfully deleted user: %d'}", id)
+
+}

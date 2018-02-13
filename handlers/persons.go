@@ -28,3 +28,19 @@ func CreatePerson(db *sql.DB) echo.HandlerFunc {
 		return c.JSON(http.StatusOK, models.CreatePerson(db, c))
 	}
 }
+
+func UpdatePerson(db *sql.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id, _ := strconv.Atoi(c.Param("id"))
+
+		return c.JSON(http.StatusOK, models.UpdatePerson(db, id, c))
+	}
+}
+
+func DeletePerson(db *sql.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id, _ := strconv.Atoi(c.Param("id"))
+
+		return c.JSON(http.StatusOK, models.DeletePerson(db, id))
+	}
+}
